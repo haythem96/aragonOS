@@ -331,10 +331,6 @@ contract Relayer is IRelayer, AragonApp, DepositableStorage, EIP712 {
         return keccak256(abi.encodePacked("\x19\x01", _domainSeparator(), hash));
     }
 
-    function _domainSeparator() internal view returns (bytes32) {
-        return _domainSeparator(EIP_712_DOMAIN_NAME, EIP_712_DOMAIN_VERSION, EIP_712_DOMAIN_CHAIN_ID, address(this));
-    }
-
     function _relayCall(address from, address to, bytes data) internal {
         bytes memory encodedSignerData = data.append(from);
         assembly {
@@ -345,5 +341,17 @@ contract Relayer is IRelayer, AragonApp, DepositableStorage, EIP712 {
                 revert(ptr, returndatasize)
             }
         }
+    }
+
+    function _domainName() internal view returns (string) {
+        return EIP_712_DOMAIN_NAME;
+    }
+
+    function _domainVersion() internal view returns (string) {
+        return EIP_712_DOMAIN_VERSION;
+    }
+
+    function _domainChainId() internal view returns (uint256) {
+        return EIP_712_DOMAIN_CHAIN_ID;
     }
 }
